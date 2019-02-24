@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-monad-server",
+  "version": "1.0.0",
+  "description": "Result (maybe) monad use sandbox",
+  "main": "server.js",
+  "scripts": {
+    "build-ts": "tsc",
+    "start": "npm run serve",
+    "serve": "node dist/server.js",
+    "watch-node": "nodemon dist/server.js",
+    "watch-ts": "tsc -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.18.10",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@types/express": "^4.16.1",
+    "express": "^4.16.4",
+    "rxjs": "^6.4.0"
+  }
+}
