@@ -10,21 +10,21 @@ import { resolve } from 'path'
 const app = express()
 
 app.get('/', (req, res) => {
-    boundFileContent(resolve(__dirname, 'testcontent.txt'), 'utf8').subscribe(
+  readFileContent('testcontent.txt').subscribe(
 
-        buffer => {
-            console.log('succcceesss');
+    buffer => {
+      console.log('succcceesss');
 
-            res.send(buffer)
-        },
+      res.send(buffer)
+    },
 
-        error => {
-            console.log("kokos");
+    error => {
+      console.log("kokos");
 
-            res.status(400).send(error)
-        }
+      res.status(400).send(error)
+    }
 
-    )
+  )
 
 
 })
@@ -32,23 +32,21 @@ app.get('/', (req, res) => {
 
 app.get('/unknown.file', (req, res) => {
 
-
-
-
-
 })
 
+const filePath = (fileName: string) => resolve(__dirname, fileName)
+
+const fileContent = (fileName: string) => boundFileContent(fileName, 'utf8')
+
+const readFileContent = (fileName: string) => fileContent(filePath(fileName))
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
+const p = (fileName: string) => new Promise((resolve) => readFile(fileName, resolve))
 
 
 const boundFileContent = bindNodeCallback((
-    path: string,
-    coding: string,
-    callback: (error: NodeJS.ErrnoException, buffer: Buffer | string) => void
+  path: string,
+  coding: string,
+  callback: (error: NodeJS.ErrnoException, buffer: Buffer | string) => void
 ) => readFile(path, coding, callback))
-
-
-
-
