@@ -6,7 +6,7 @@ export enum RestStatus {
     BAD_REQUEST = 400
 }
 
-export interface RestResponse {
+export type RestResponse = {
     status: RestStatus
     body: string
 }
