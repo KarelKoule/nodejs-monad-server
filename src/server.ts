@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import { Result } from './Result';
 import { fstat, readFile } from 'fs';
 import { checkServerIdentity } from 'tls';
-import { bindCallback, bindNodeCallback } from 'rxjs';
+import { bindCallback, bindNodeCallback, pipe } from 'rxjs';
 import { stringify } from 'querystring';
 import { resolve } from 'path'
 
@@ -38,11 +38,11 @@ const filePath = (fileName: string) => resolve(__dirname, fileName)
 
 const fileContent = (fileName: string) => boundFileContent(fileName, 'utf8')
 
-const readFileContent = (fileName: string) => fileContent(filePath(fileName))
+const readFileContent = pipe(filePath, fileContent)
+
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
-const p = (fileName: string) => new Promise((resolve) => readFile(fileName, resolve))
 
 
 const boundFileContent = bindNodeCallback((

@@ -1,11 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Severity;
-(function (Severity) {
-    Severity["Info"] = "INFO";
-    Severity["Error"] = "ERROR";
-    Severity["Warning"] = "WARNING";
-})(Severity || (Severity = {}));
 class Result {
     constructor(value) {
         this.value = value;

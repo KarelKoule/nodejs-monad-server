@@ -9,7 +9,7 @@ const rxjs_1 = require("rxjs");
 const path_1 = require("path");
 const app = express_1.default();
 app.get('/', (req, res) => {
-    boundFileContent(path_1.resolve(__dirname, 'testcontent.txt'), 'utf8').subscribe(buffer => {
+    readFileContent('testcontent.txt').subscribe(buffer => {
         console.log('succcceesss');
         res.send(buffer);
     }, error => {
@@ -19,6 +19,9 @@ app.get('/', (req, res) => {
 });
 app.get('/unknown.file', (req, res) => {
 });
+const filePath = (fileName) => path_1.resolve(__dirname, fileName);
+const fileContent = (fileName) => boundFileContent(fileName, 'utf8');
+const readFileContent = rxjs_1.pipe(filePath, fileContent);
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
 const boundFileContent = rxjs_1.bindNodeCallback((path, coding, callback) => fs_1.readFile(path, coding, callback));
 //# sourceMappingURL=server.js.map
