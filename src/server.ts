@@ -11,22 +11,22 @@ import { okResponse, badRequestResponse, RestResponse } from './RestResponse';
 const app = express()
 
 app.get('/', (req, res) => {
-    readFileContent('testcontent.txt').subscribe(
+  readFileContent('testcontent.txt').subscribe(
 
 
-        buffer => {
-            console.log('succcceesss');
+    buffer => {
+      console.log('succcceesss');
 
-            res.send(buffer)
-        },
+      res.send(buffer)
+    },
 
-        error => {
-            console.log("kokos");
+    error => {
+      console.log("kokos");
 
-            res.status(400).send(error)
-        }
+      res.status(400).send(error)
+    }
 
-    )
+  )
 
 })
 
@@ -41,9 +41,9 @@ const fileContent = (fileName: string) => boundFileContent(fileName, 'utf8')
 
 const readFileContent = pipe(filePath, fileContent)
 
-const wrap = (f: (req: Request) => Result<string>) => (req: Request, res: Response) => {
-    const result = f(req).map(okResponse).recover(badRequestResponse)
-    res.status(result.status).json(result.body)
+const handleRequest = (handler: (req: Request) => Result<string>) => (req: Request, res: Response) => {
+  const result = handler(req).map(okResponse).recover(badRequestResponse)
+  res.status(result.status).json(result.body)
 }
 
 
@@ -60,7 +60,7 @@ app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
 
 const boundFileContent = bindNodeCallback((
-    path: string,
-    coding: string,
-    callback: (error: NodeJS.ErrnoException, buffer: Buffer | string) => void
+  path: string,
+  coding: string,
+  callback: (error: NodeJS.ErrnoException, buffer: Buffer | string) => void
 ) => readFile(path, coding, callback))
