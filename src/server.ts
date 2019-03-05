@@ -10,9 +10,8 @@ import { okResponse, badRequestResponse, RestResponse } from './RestResponse';
 
 const app = express()
 
-app.get('/', (req, res) => {
-  readFileContent('testcontent.txt').subscribe(
-
+app.get('/read/:filename', (req, res) => {
+  readFileContent(req.params.filename).subscribe(
 
     buffer => {
       console.log('succcceesss');
@@ -25,7 +24,6 @@ app.get('/', (req, res) => {
 
       res.status(400).send(error)
     }
-
   )
 
 })
@@ -41,21 +39,20 @@ const fileContent = (fileName: string) => boundFileContent(fileName, 'utf8')
 
 const readFileContent = pipe(filePath, fileContent)
 
-const handleRequest = (handler: (req: Request) => Result<string>) => (req: Request, res: Response) => {
+const handleRequest = (handler: (req: Request) => Result<any>) => (req: Request, res: Response) => {
   const result = handler(req).map(okResponse).recover(badRequestResponse)
   res.status(result.status).json(result.body)
 }
 
+const sumHandler = (req: Request) => Result.of(sum(req.params.x, req.params.y))
 
 
-// app.get('/sum/:x/:y', wrap((req: Request) => ({
-//     headers: { 'Foo': 'Bar' },
-//     body: { result: +req.params.x + +req.params.y },
-// })));
+const sum = (x: number, y: number) => +x + +y
+
+app.get('/sum/:x/:y', handleRequest(sumHandler))
 
 
-
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(3000, () => console.log('Listening on port 3000!'))
 
 
 

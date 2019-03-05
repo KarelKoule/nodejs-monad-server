@@ -41,5 +41,5 @@ export class Result<T> {
 }
 
 function isFailure(arg: any): arg is Failure {
-    return arg !== undefined
+    return arg.severity !== undefined
 }
