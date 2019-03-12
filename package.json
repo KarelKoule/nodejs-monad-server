@@ -25,7 +25,10 @@
   },
   "dependencies": {
     "@types/express": "^4.16.1",
+    "@types/mongodb": "^3.1.22",
     "express": "^4.16.4",
+    "helmet": "^3.15.1",
+    "mongodb": "^3.1.13",
     "rxjs": "^6.4.0"
   }
 }

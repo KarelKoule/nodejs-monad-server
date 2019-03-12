@@ -2,31 +2,68 @@ import express, { Request, Response } from 'express'
 import { Result } from './util/Result';
 import { fstat, readFile } from 'fs';
 import { checkServerIdentity } from 'tls';
-import { bindCallback, bindNodeCallback, pipe } from 'rxjs';
+import { bindCallback, bindNodeCallback, pipe, of } from 'rxjs';
 import { stringify } from 'querystring';
 import { resolve } from 'path'
 import { okResponse, badRequestResponse, RestResponse } from './RestResponse';
+import { json } from 'body-parser';
+import { connect } from 'http2';
+import { db as conn } from './Connection'
 
 
-const app = express()
+const app = express().use(require('helmet')())
+
+
+app.get('/mongo/insertcity/:name', (req, res) => {
+
+  conn.then(db => db.collection('cities').insert({ name: req.params.name })
+
+  ).then(result => {
+    res.json(result)
+  })
+
+
+})
+
+app.get('/mongo/listcity', (req, res) => {
+  conn.then(db => {
+    return db.collection('cities').find().toArray()
+  }).then(result => {
+    res.json(result)
+  })
+})
+
+
+
+app.get('/values', (req, res) => {
+  res.type('json')
+
+  of("first", "secong").subscribe(
+    buffer => res.write(buffer),
+    errorHandle(res),
+    () => res.end()
+  )
+})
+
+
 
 app.get('/read/:filename', (req, res) => {
-  readFileContent(req.params.filename).subscribe(
+  readFileContent(req.params.filename).subscribe({
 
-    buffer => {
+    next: buffer => {
       console.log('succcceesss');
 
       res.send(buffer)
     },
 
-    error => {
-      console.log("kokos");
-
-      res.status(400).send(error)
-    }
-  )
+    error: errorHandle(res),
+    complete: () => console.log('Comp')
+  })
 
 })
+
+
+const errorHandle = (res: Response) => (error: any) => res.status(400).send(error)
 
 
 app.get('/unknown.file', (req, res) => {
